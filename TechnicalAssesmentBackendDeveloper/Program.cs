@@ -123,3 +123,10 @@ public class Fruit
         return $"{Name} ({Color})";
     }
 }
+
+public interface IItemManager<T>
+{
+    void AddItem(T item);
+    void RemoveItem(T item);
+    void PrintAllItems();
+}
