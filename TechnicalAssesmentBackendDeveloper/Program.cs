@@ -46,6 +46,24 @@ public class ItemManager : IItemManager<string>
             Console.WriteLine(item);
         }
     }
+
+    public void RemoveItem(string item)
+    {
+        if(items.Contains(item))
+        {
+            items.Remove(item);
+            Console.WriteLine($"Removed : {item}");
+        }
+        else
+        {
+            Console.WriteLine($"Item not found : {item}");
+        }
+    }
+
+    public void ClearAllItems()
+    {
+        items = [];
+    }
 }
 
 public class ItemManager<T> : IItemManager<T>
@@ -67,6 +85,19 @@ public class ItemManager<T> : IItemManager<T>
         foreach (var item in items)
         {
             Console.WriteLine(item);
+        }
+    }
+
+    public void RemoveItem(T item)
+    {
+        if (items.Contains(item))
+        {
+            items.Remove(item);
+            Console.WriteLine($"Removed : {item}");
+        }
+        else
+        {
+            Console.WriteLine($"Item not found : {item}");
         }
     }
 
