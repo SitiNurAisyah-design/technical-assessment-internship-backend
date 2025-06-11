@@ -3,11 +3,9 @@
     static void Main(string[] args)
     {
         Console.WriteLine("Welcome to the Item Manager!");
-
         ItemManager manager = new ItemManager();
 
         // Part One: Fix the NullReferenceException
-        // This will throw a NullReferenceException
         manager.AddItem("Apple");
         manager.AddItem("Banana");
 
@@ -15,18 +13,26 @@
 
         // Part Two: Implement the RemoveItem method
         manager.RemoveItem("Apple");
+        manager.PrintAllItems();
 
         // Part Three: Introduce a Fruit class and use the ItemManager<Fruit> to add a few fruits and print them on the console.
-        // TODO: Implement this part three.
+        ItemManager<Fruit> fruitManager = new ItemManager<Fruit>();
+        fruitManager.AddItem(new Fruit("Apple", "Red"));
+        fruitManager.AddItem(new Fruit("Banana", "Yellow"));
+        fruitManager.AddItem(new Fruit("Grapes", "Green"));
 
-        // Part Four (Bonus): Implement an interface IItemManager and make ItemManager implement it.
-        // TODO: Implement this part four.
+        Console.WriteLine("\nFruit List:");
+        fruitManager.PrintAllItems();
     }
 }
 
-public class ItemManager
+public class ItemManager : IItemManager<string>
 {
     private List<string> items;
+    public ItemManager()
+    {
+        items = new List<string>();
+    }
 
     public void AddItem(string item)
     {
@@ -40,23 +46,16 @@ public class ItemManager
             Console.WriteLine(item);
         }
     }
-
-    // Part Two: Implement the RemoveItem method
-    // TODO: Implement this method
-    public void RemoveItem(string item)
-    {
-        throw new NotImplementedException("RemoveItem method is not implemented yet. Please remove this line and implement this method.");
-    }
-
-    public void ClearAllItems()
-    {
-        items = [];
-    }
 }
 
-public class ItemManager<T>
+public class ItemManager<T> : IItemManager<T>
 {
     private List<T> items;
+
+    public ItemManager()
+    {
+        items = new List<T>();
+    }
 
     public void AddItem(T item)
     {
