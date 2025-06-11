@@ -106,3 +106,20 @@ public class ItemManager<T> : IItemManager<T>
         items = [];
     }
 }
+
+public class Fruit
+{
+    public string Name { get; set; }
+    public string Color { get; set; }
+
+    public Fruit(string name, string color)
+    {
+        Name = name;
+        Color = color;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name} ({Color})";
+    }
+}
