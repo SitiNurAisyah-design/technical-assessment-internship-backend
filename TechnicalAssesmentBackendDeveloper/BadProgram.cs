@@ -1,66 +1,71 @@
-﻿namespace TechnicalAssesmentBackendDeveloper;
-
-class Booking
+﻿namespace TechnicalAssesmentBackendDeveloper
 {
-    public string guestname;
-    public string roomnumber;
-    public DateTime checkindate;
-    public DateTime checkoutdate;
-    public int totaldays;
-    public double rateperday;
-    public double discount;
-    public double totalamount;
-
-    public void BookRoom(string name, string room, DateTime checkin, DateTime checkout, double rate, double discountRate)
+    public class Booking
     {
-        guestname = name;
-        roomnumber = room;
-        checkindate = checkin;
-        checkoutdate = checkout;
-        rateperday = rate;
-        discount = discountRate;
+        public string GuestName { get; private set; }
+        public string RoomNumber { get; private set; }
+        public DateTime CheckInDate { get; private set; }
+        public DateTime CheckOutDate { get; private set; }
+        public int TotalDays { get; private set; }
+        public double RatePerDay { get; private set; }
+        public double Discount { get; private set; }
+        public double TotalAmount { get; private set; }
 
-        totaldays = (checkout - checkin).Days;
-        totalamount = totaldays * rateperday;
-        totalamount = totalamount - (totalamount * discount / 100);
+        public async Task BookRoomAsync(string name, string room, DateTime checkin, DateTime checkout, double rate, double discountRate)
+        {
+            GuestName = name;
+            RoomNumber = room;
+            CheckInDate = checkin;
+            CheckOutDate = checkout;
+            RatePerDay = rate;
+            Discount = discountRate;
 
-        LogBookingDetailsAsync();
+            TotalDays = (checkout - checkin).Days;
+            TotalAmount = TotalDays * RatePerDay;
+            TotalAmount -= TotalAmount * Discount / 100;
 
-        Console.WriteLine("Room Booked for " + guestname);
-        Console.WriteLine("Room No: " + roomnumber);
-        Console.WriteLine("Check-In: " + checkindate.ToString());
-        Console.WriteLine("Check-Out: " + checkoutdate.ToString());
-        Console.WriteLine("Total Days: " + totaldays);
-        Console.WriteLine("Amount: " + totalamount);
+            await LogBookingDetailsAsync();
+
+            PrintSummary();
+        }
+
+        private async Task LogBookingDetailsAsync()
+        {
+            await Task.Delay(1000); // Simulate async logging
+            Console.WriteLine("Booking log saved.");
+        }
+
+        private void PrintSummary()
+        {
+            Console.WriteLine($"Room Booked for {GuestName}");
+            Console.WriteLine($"Room No: {RoomNumber}");
+            Console.WriteLine($"Check-In: {CheckInDate}");
+            Console.WriteLine($"Check-Out: {CheckOutDate}");
+            Console.WriteLine($"Total Days: {TotalDays}");
+            Console.WriteLine($"Amount: {TotalAmount}");
+        }
+
+        public void Cancel()
+        {
+            GuestName = null;
+            RoomNumber = null;
+            CheckInDate = DateTime.MinValue;
+            CheckOutDate = DateTime.MinValue;
+            RatePerDay = 0;
+            Discount = 0;
+            TotalAmount = 0;
+
+            Console.WriteLine("Booking cancelled.");
+        }
     }
 
-    public async Task LogBookingDetailsAsync()
+    public static class AppHost
     {
-        // Simulate writing to a log file or remote system
-        await Task.Delay(1000);
-        Console.WriteLine("Booking log saved.");
-    }
-
-    public void Cancel()
-    {
-        guestname = null;
-        roomnumber = null;
-        checkindate = DateTime.MinValue;
-        checkoutdate = DateTime.MinValue;
-        rateperday = 0;
-        discount = 0;
-        totalamount = 0;
-
-        Console.WriteLine("Booking cancelled");
-    }
-}
-
-public static class AppHost
-{
-    static void Run(string[] args)
-    {
-        Booking b = new Booking();
-        b.BookRoom("Alice", "101", DateTime.Now, DateTime.Now.AddDays(3), 150.5, 10);
-        b.Cancel();
+        public static async Task RunAsync()
+        {
+            var booking = new Booking();
+            await booking.BookRoomAsync("Alice", "101", DateTime.Now, DateTime.Now.AddDays(3), 150.5, 10);
+            booking.Cancel();
+        }
     }
 }
